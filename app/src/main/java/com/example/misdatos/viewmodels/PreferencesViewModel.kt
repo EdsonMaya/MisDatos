@@ -17,8 +17,10 @@ class PreferencesViewModel (val context:Context) {
         val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
         val NAME = stringPreferencesKey("name")
         val AGE = intPreferencesKey("age")
+        val ESTATURA = intPreferencesKey("estatura")
+        val PESO = intPreferencesKey("peso")
+        val HOBBY = stringPreferencesKey("hobby")
     }
-
         ///Equivale al getAge() pero asincrono
         val age: Flow<Int> = context.dataStore.data.map{
                 preferences ->
@@ -27,16 +29,36 @@ class PreferencesViewModel (val context:Context) {
     }
 
     ///Equivale al getName() pero asincrono
-    val name:Flow<String> = context.dataStore.data.map {
+        val name:Flow<String> = context.dataStore.data.map {
         preferencias->
         preferencias[NAME]?:""
     }
 
+    val estatura: Flow<Int> = context.dataStore.data.map{
+            preferences ->
+        //No type safety.
+        preferences[ESTATURA] ?:0
+    }
+
+    val peso: Flow<Int> = context.dataStore.data.map{
+            preferences ->
+        //No type safety.
+        preferences[PESO] ?:0
+    }
+
+    val hobby:Flow<String> = context.dataStore.data.map {
+            preferencias->
+        preferencias[HOBBY]?:""
+    }
+
     ///Equivale al setName() y getName()
-    suspend fun setNameAndAge(name:String, age:Int){
+    suspend fun setNameAndAge(name:String, age:Int, estatura:Int, peso:Int, hobby:String){
         context.dataStore.edit{ settings ->
             settings[NAME] = name
             settings[AGE] = age
+            settings[ESTATURA] = estatura
+            settings[PESO] = peso
+            settings[HOBBY] = hobby
         }
     }
 }
